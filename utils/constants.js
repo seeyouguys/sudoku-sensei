@@ -5,6 +5,8 @@ export const COLORS = {
   primary: '#FFFFFF',
   secondary: '#808080',
   accent: '#F46B3C',
+  accent50: '#773924',
+  accent20: '#402319',
 };
 
 export const SIZE = {
