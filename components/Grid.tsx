@@ -1,6 +1,15 @@
-import React, {FC, useEffect} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {FC, useCallback, useEffect, useRef} from 'react';
+import {
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {COLORS, SIZE} from '../utils/constants';
+
+// ##################################### GRID ##################################
 
 type GridProps = {
   gridState: string[][];
@@ -32,6 +41,8 @@ const Grid: FC<GridProps> = ({
   );
 };
 
+// ##################################### CELL ##################################
+
 type CellProps = {
   sym: string;
   key: number;
@@ -44,8 +55,8 @@ const Cell: FC<CellProps> = ({
   sym,
   x,
   y,
-  trySetNumber,
   isHighlighted,
+  trySetNumber,
 }: CellProps) => {
   if (sym === '.') {
     sym = '';
@@ -64,24 +75,27 @@ const Cell: FC<CellProps> = ({
   if (isHighlighted) {
     conditionalStyles.push(styles.cellHighlighted);
   }
-
+  // const rerenderCounter = useRef(0);
+  // rerenderCounter.current += 1;
   const isUserSelectable = sym === '';
   if (isUserSelectable) {
     return (
-      <TouchableOpacity
-        onPress={trySetNumber}
-        style={[styles.cell, ...conditionalStyles]}>
-        <Text style={styles.cellText}>{sym}</Text>
-      </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={trySetNumber}>
+        <View style={[styles.cell, conditionalStyles]}>
+          <Text style={styles.cellText}>{sym}</Text>
+        </View>
+      </TouchableWithoutFeedback>
     );
   } else {
     return (
-      <View style={[styles.cell, ...conditionalStyles]}>
+      <View style={[styles.cell, conditionalStyles]}>
         <Text style={styles.cellText}>{sym}</Text>
       </View>
     );
   }
 };
+
+// #################################### STYLES #################################
 
 const styles = StyleSheet.create({
   gridContainer: {

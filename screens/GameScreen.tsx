@@ -1,5 +1,5 @@
 import React, {FC, useEffect, useState} from 'react';
-import {ImageBackground, StyleSheet} from 'react-native';
+import {ImageBackground, StyleSheet, Text} from 'react-native';
 import {pattern} from '../assets/Images';
 import {COLORS, SIZE} from '../utils/constants';
 import Grid from '../components/Grid';
@@ -35,12 +35,12 @@ const GameScreen: FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (gridState) {
-      console.log('gridState: ');
-      gridState.forEach(row => console.log(row));
-    }
-  }, [gridState]);
+  // useEffect(() => {
+  //   if (gridState) {
+  //     console.log('gridState: ');
+  //     gridState.forEach(row => console.log(row));
+  //   }
+  // }, [gridState]);
 
   useEffect(() => {
     // выбрать случайную головоломку и ее решение
@@ -55,6 +55,7 @@ const GameScreen: FC = () => {
       style={styles.container}
       source={pattern}
       resizeMode="repeat">
+      <Text style={styles.text}>ОШИБОК: {errorsCounter}</Text>
       {gridState && initialBoard && (
         <Grid
           gridState={gridState}
@@ -80,6 +81,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.bgDark,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  text: {
+    color: COLORS.primary,
+    padding: 14,
+    fontFamily: 'Roboto',
+    letterSpacing: 4,
+    fontWeight: 'semibold',
+    fontSize: 14,
   },
   footerButtons: {
     width: '100%',
