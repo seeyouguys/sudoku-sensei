@@ -5,6 +5,7 @@ import {COLORS, SIZE} from '../utils/constants';
 import Grid from '../components/Grid';
 import {getRandomBoard} from '../utils/SudokuSeeds';
 import NumPicker from '../components/NumPicker';
+import Timer from '../components/Timer';
 
 const GameScreen: FC = () => {
   const [gridState, setGridState] = useState<string[][]>();
@@ -54,8 +55,10 @@ const GameScreen: FC = () => {
     <ImageBackground
       style={styles.container}
       source={pattern}
+      imageStyle={{opacity: 0.5}}
       resizeMode="repeat">
-      <Text style={styles.text}>ОШИБОК: {errorsCounter}</Text>
+      <Timer style={styles.timer} />
+
       {gridState && initialBoard && (
         <Grid
           gridState={gridState}
@@ -70,6 +73,8 @@ const GameScreen: FC = () => {
         setNumSelected={setNumSelected}
         numSelected={numSelected}
       />
+
+      <Text style={styles.text}>ОШИБОК: {errorsCounter}</Text>
     </ImageBackground>
   );
 };
@@ -82,9 +87,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  timer: {
+    marginBottom: 'auto',
+    zIndex: -1,
+  },
   text: {
     color: COLORS.primary,
-    padding: 14,
+    padding: 25,
     fontFamily: 'Roboto',
     letterSpacing: 4,
     fontWeight: 'semibold',
