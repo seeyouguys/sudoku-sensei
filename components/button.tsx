@@ -6,12 +6,24 @@ type Props = {
   text: string;
   isPrimary?: boolean;
   onClick?: () => void;
+  isDisabled?: boolean;
 };
 
-const Button: FC<Props> = ({text, isPrimary, onClick}) => {
+const Button: FC<Props> = ({text, isPrimary, onClick, isDisabled}) => {
+  const style = [];
+
+  if (isPrimary) {
+    style.push(styles.primaryButton);
+  }
+
+  if (isDisabled) {
+    style.push(styles.disabledButton);
+  }
+
   return (
-    <TouchableOpacity style={isPrimary && styles.primaryButton}>
+    <TouchableOpacity disabled={isDisabled} style={style}>
       <Text style={styles.text}>{text}</Text>
+      {isDisabled && <View style={styles.line} />}
     </TouchableOpacity>
   );
 };
@@ -21,6 +33,10 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.accent,
     borderRadius: 2,
   },
+  disabledButton: {
+    opacity: 0.5,
+    alignItems: 'center',
+  },
   text: {
     color: COLORS.primary,
     padding: 14,
@@ -28,6 +44,13 @@ const styles = StyleSheet.create({
     letterSpacing: 4,
     fontWeight: 'semibold',
     fontSize: 14,
+  },
+  line: {
+    width: 200,
+    height: 1,
+    backgroundColor: COLORS.primary,
+    position: 'relative',
+    bottom: '50%',
   },
 });
 

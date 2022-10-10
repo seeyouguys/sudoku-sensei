@@ -52,30 +52,32 @@ const GameScreen: FC = () => {
   }, []);
 
   return (
-    <ImageBackground
-      style={styles.container}
-      source={pattern}
-      imageStyle={{opacity: 0.5}}
-      resizeMode="repeat">
-      <Timer style={styles.timer} />
+    <>
+      <ImageBackground
+        style={styles.container}
+        source={pattern}
+        imageStyle={{opacity: 0.5}}
+        resizeMode="repeat">
+        <Timer style={styles.timer} />
 
-      {gridState && initialBoard && (
-        <Grid
-          gridState={gridState}
+        {gridState && initialBoard && (
+          <Grid
+            gridState={gridState}
+            numSelected={numSelected}
+            initialBoard={initialBoard}
+            trySetNumber={trySetNumber}
+          />
+        )}
+
+        <NumPicker
+          remainingNums={['1', '2', '3', '4', '5', '6', '7', '8', '9']}
+          setNumSelected={setNumSelected}
           numSelected={numSelected}
-          initialBoard={initialBoard}
-          trySetNumber={trySetNumber}
         />
-      )}
 
-      <NumPicker
-        remainingNums={['1', '2', '3', '4', '5', '6', '7', '8', '9']}
-        setNumSelected={setNumSelected}
-        numSelected={numSelected}
-      />
-
-      <Text style={styles.text}>ОШИБОК: {errorsCounter}</Text>
-    </ImageBackground>
+        <Text style={styles.text}>ОШИБОК: {errorsCounter}</Text>
+      </ImageBackground>
+    </>
   );
 };
 
