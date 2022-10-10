@@ -1,5 +1,11 @@
-import React, {FC} from 'react';
-import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
+import React, {FC, useCallback, useMemo} from 'react';
+import {
+  GestureResponderEvent,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {COLORS, SIZE} from '../utils/constants';
 
 type Props = {
@@ -9,10 +15,44 @@ type Props = {
 };
 
 const NumPicker: FC<Props> = ({remainingNums, setNumSelected, numSelected}) => {
+  // Выяснить, над каким вариантом сейчас находится палец:
+  // 1. Для этого считаем ширину одного option
+  //    (ширину экрана делим на число оставшихся чисел).
+  //    Это значение мемоизируется и пересчитывается,
+  //    когда в игре останется меньше чисел.
+  // 2. Координаты положения пальца по оси X делим на ширину
+  //    option и округляем. (~~ — это отбрасывание чисел после запятой)
+  // 3. Получившееся число — это индекс выбранного элемента в массиве remainingNums
+  const optionWidth = useMemo(() => {
+    return ~~(SIZE.MAX_WIDTH / remainingNums.length);
+  }, [remainingNums.length]);
+
+  const getChosenOption = locationX => {
+    const chosenOptionIdx = ~~(locationX / optionWidth);
+    const newNum = remainingNums[chosenOptionIdx];
+    return newNum;
+  };
+
+  const onMove = (e: GestureResponderEvent) => {
+    const newNum = getChosenOption(e.nativeEvent.pageX);
+    if (newNum !== numSelected) {
+      setNumSelected(newNum);
+    }
+  };
+
+  const onStart = (e: GestureResponderEvent) => {
+    const newNum = getChosenOption(e.nativeEvent.pageX);
+    setNumSelected(newNum);
+  };
+
   return (
-    <View style={styles.container}>
+    <View
+      style={styles.container}
+      onStartShouldSetResponder={() => true}
+      onResponderStart={onStart}
+      onResponderMove={onMove}>
       {remainingNums.map((num, i) => (
-        <TouchableWithoutFeedback key={i} onPressIn={() => setNumSelected(num)}>
+        <View key={i}>
           <View
             style={[
               styles.option,
@@ -23,7 +63,7 @@ const NumPicker: FC<Props> = ({remainingNums, setNumSelected, numSelected}) => {
             ]}>
             <Text style={styles.optionText}>{num}</Text>
           </View>
-        </TouchableWithoutFeedback>
+        </View>
       ))}
     </View>
   );
