@@ -1,5 +1,13 @@
-import React, {FC, useEffect, useState} from 'react';
-import {ImageBackground, StyleSheet, Text} from 'react-native';
+import React, {FC, useEffect, useRef, useState} from 'react';
+import * as Animatable from 'react-native-animatable';
+import {
+  Animated,
+  Easing,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {pattern} from '../assets/Images';
 import {COLORS, SIZE} from '../utils/constants';
 import Grid from '../components/Grid';
@@ -14,6 +22,17 @@ const GameScreen: FC = () => {
   const [initialBoard, setInitialBoard] = useState<string[][]>();
 
   const [numSelected, setNumSelected] = useState<string | null>(null);
+  const [remainingNums, setRemainingNums] = useState<string[]>([
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+  ]);
 
   // попытаться поставить цифру num в клетку c координатами r-c
   const trySetNumber = (num: string | null, r: number, c: number): void => {
@@ -32,16 +51,13 @@ const GameScreen: FC = () => {
     } else {
       // цифра не совпала с ответом
       setErrorsCounter(errorsCounter + 1);
-      // TODO: добавить красную вспышку экрана
+      gridRef.current.shake(300);
+      errorsRef.current.tada();
     }
   };
 
-  // useEffect(() => {
-  //   if (gridState) {
-  //     console.log('gridState: ');
-  //     gridState.forEach(row => console.log(row));
-  //   }
-  // }, [gridState]);
+  const gridRef = useRef();
+  const errorsRef = useRef();
 
   useEffect(() => {
     // выбрать случайную головоломку и ее решение
@@ -61,21 +77,25 @@ const GameScreen: FC = () => {
         <Timer style={styles.timer} />
 
         {gridState && initialBoard && (
-          <Grid
-            gridState={gridState}
-            numSelected={numSelected}
-            initialBoard={initialBoard}
-            trySetNumber={trySetNumber}
-          />
+          <Animatable.View ref={gridRef}>
+            <Grid
+              gridState={gridState}
+              numSelected={numSelected}
+              initialBoard={initialBoard}
+              trySetNumber={trySetNumber}
+            />
+          </Animatable.View>
         )}
 
         <NumPicker
-          remainingNums={['1', '2', '3', '4', '5', '6', '7', '8', '9']}
+          remainingNums={remainingNums}
           setNumSelected={setNumSelected}
           numSelected={numSelected}
         />
 
-        <Text style={styles.text}>ОШИБОК: {errorsCounter}</Text>
+        <Animatable.Text ref={errorsRef} style={styles.text}>
+          ОШИБОК: {errorsCounter}
+        </Animatable.Text>
       </ImageBackground>
     </>
   );
