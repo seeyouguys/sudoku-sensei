@@ -1,4 +1,5 @@
 import React, {FC} from 'react';
+import * as Animatable from 'react-native-animatable';
 import {StyleSheet, Text, View} from 'react-native';
 import {COLORS, SIZE} from '../utils/constants';
 
@@ -10,14 +11,20 @@ type Props = {
 
 const ModalBase: FC<Props> = ({style, children, headerText}) => {
   return (
-    <View style={[styles.dim, style]}>
+    <Animatable.View
+      duration={300}
+      animation={'fadeIn'}
+      style={[styles.dim, style]}>
       <View style={styles.container}>
-        <View style={styles.header}>
+        <Animatable.View
+          duration={500}
+          animation={'flipInX'}
+          style={styles.header}>
           <Text style={styles.text}>{headerText}</Text>
-        </View>
+        </Animatable.View>
         {children}
       </View>
-    </View>
+    </Animatable.View>
   );
 };
 

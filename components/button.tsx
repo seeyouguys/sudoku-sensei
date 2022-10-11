@@ -21,7 +21,7 @@ const Button: FC<Props> = ({text, isPrimary, onClick, isDisabled}) => {
   }
 
   return (
-    <TouchableOpacity disabled={isDisabled} style={style}>
+    <TouchableOpacity onPress={onClick} disabled={isDisabled} style={style}>
       <Text style={styles.text}>{text}</Text>
       {isDisabled && <View style={styles.line} />}
     </TouchableOpacity>
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   line: {
-    width: 200,
+    width: 170,
     height: 1,
     backgroundColor: COLORS.primary,
     position: 'relative',

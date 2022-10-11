@@ -6,6 +6,7 @@ import {
   ImageBackground,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {pattern} from '../assets/Images';
@@ -15,7 +16,7 @@ import {getRandomBoard} from '../utils/SudokuSeeds';
 import NumPicker from '../components/NumPicker';
 import Timer from '../components/Timer';
 
-const GameScreen: FC = () => {
+const GameScreen: FC = ({navigation, route}) => {
   const [gridState, setGridState] = useState<string[][]>();
   const [errorsCounter, setErrorsCounter] = useState<number>(0);
   const [solution, setSolution] = useState<string[][]>();
@@ -61,7 +62,8 @@ const GameScreen: FC = () => {
 
   useEffect(() => {
     // выбрать случайную головоломку и ее решение
-    const [_initialBoard, _solution] = getRandomBoard('easy');
+    const level = route.params.level;
+    const [_initialBoard, _solution] = getRandomBoard(level);
     setSolution(_solution);
     setInitialBoard(_initialBoard);
     setGridState(_initialBoard);
@@ -74,7 +76,13 @@ const GameScreen: FC = () => {
         source={pattern}
         imageStyle={{opacity: 0.5}}
         resizeMode="repeat">
-        <Timer style={styles.timer} />
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}
+          />
+          <Timer style={styles.timer} />
+        </View>
 
         {gridState && initialBoard && (
           <Animatable.View ref={gridRef}>
@@ -109,8 +117,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  timer: {
+  header: {
     marginBottom: 'auto',
+    width: '100%',
+    alignItems: 'center',
+  },
+  backButton: {
+    top: 20,
+    left: 30,
+    height: 40,
+    width: 40,
+    alignSelf: 'flex-start',
+    position: 'absolute',
+    borderLeftWidth: 7,
+    borderBottomWidth: 7,
+    borderBottomColor: COLORS.primary,
+    borderLeftColor: COLORS.primary,
+    transform: [{rotate: '45deg'}],
+  },
+  timer: {
     zIndex: -1,
   },
   text: {

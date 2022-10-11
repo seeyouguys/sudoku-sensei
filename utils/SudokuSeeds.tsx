@@ -4,6 +4,7 @@ interface Seeds {
   easy: string[][];
   medium: string[];
   hard: string[];
+  evil: string[];
 }
 
 // TODO: заполнить уровни сложности новыми сидами
@@ -18,6 +19,9 @@ const SEEDS: Seeds = {
     '98.67.32.6.74..9....19.2..4..5..4.93.........27.5..8..1..3.74....8..61.5.39.48.72',
   ],
   hard: [
+    '98.67.32.6.74..9....19.2..4..5..4.93.........27.5..8..1..3.74....8..61.5.39.48.72',
+  ],
+  evil: [
     '98.67.32.6.74..9....19.2..4..5..4.93.........27.5..8..1..3.74....8..61.5.39.48.72',
   ],
 };
@@ -35,7 +39,7 @@ const matrixFromSeed = (seed: string): string[][] => {
 };
 
 // Взять случайный сид, модифицировать его и вернуть
-type Level = 'easy' | 'medium' | 'hard';
+export type Level = 'easy' | 'medium' | 'hard' | 'evil';
 export const getRandomBoard = (level: Level): string[][][] => {
   const seedIdx: number = randomBetween(0, SEEDS[level].length - 1);
   const [seed, solution] = SEEDS[level][seedIdx];

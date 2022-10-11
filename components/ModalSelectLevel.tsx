@@ -1,21 +1,23 @@
 import React, {FC} from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {COLORS} from '../utils/constants';
+import {Level} from '../utils/SudokuSeeds';
 import Button from './button';
 import ModalBase from './ModalBase';
 
 type Props = {
   style?: object;
+  startGame: (level: Level) => void;
 };
 
-const ModalSelectLevel: FC<Props> = ({style}) => {
+const ModalSelectLevel: FC<Props> = ({style, startGame}) => {
   return (
     <ModalBase style={style} headerText="ВЫБЕРИ СЛОЖНОСТЬ">
-      <Button text="УЧЕНИК" />
-      <Button text="АДЕПТ" />
-      <Button isDisabled text="МАСТЕР" />
-      <Button isDisabled text="МУДРЕЦ" />
-      <Button isDisabled text="СЕНСЕЙ" />
+      <Button onClick={() => startGame('easy')} text="УЧЕНИК" />
+      {/* <Button onClick={() => startGame('easy')} text="АДЕПТ" /> */}
+      <Button onClick={() => startGame('medium')} isDisabled text="МАСТЕР" />
+      <Button onClick={() => startGame('hard')} isDisabled text="МУДРЕЦ" />
+      <Button onClick={() => startGame('evil')} isDisabled text="СЕНСЕЙ" />
     </ModalBase>
   );
 };
