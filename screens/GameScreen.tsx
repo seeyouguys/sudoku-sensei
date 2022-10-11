@@ -4,6 +4,7 @@ import {
   Animated,
   Easing,
   ImageBackground,
+  InteractionManager,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -82,14 +83,19 @@ const GameScreen: FC = ({navigation, route}) => {
 
   useEffect(() => {
     // выбрать случайную головоломку и ее решение
-    const level = route.params.level;
-    const [_initialBoard, _solution] = getRandomBoard(level);
+    // requestAnimationFrame чтобы анимация перехода на этот экран не лагала
+    const longTask = requestAnimationFrame(() => {
+      const level = route.params.level;
+      const [_initialBoard, _solution] = getRandomBoard(level);
 
-    emptyCellsCounter.current = countEmptyCells(_initialBoard);
+      emptyCellsCounter.current = countEmptyCells(_initialBoard);
 
-    setSolution(_solution);
-    setInitialBoard(_initialBoard);
-    setGridState(_initialBoard);
+      setSolution(_solution);
+      setInitialBoard(_initialBoard);
+      setGridState(_initialBoard);
+      gridRef.current.fadeInDown(400);
+    });
+    return () => cancelAnimationFrame(longTask);
   }, []);
 
   return (
