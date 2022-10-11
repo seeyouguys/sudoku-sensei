@@ -12,12 +12,13 @@ type GameStatsObj = {
 type Props = {
   style?: object;
   gameStats: GameStatsObj;
+  navigateToMenu: () => void;
 };
 
 // Пример использования
 // <ModalGameOver gameStats={{time: '1:39', difficulty: 'МАСТЕР'}} />
 
-const ModalGameOver: FC<Props> = ({style, gameStats}) => {
+const ModalGameOver: FC<Props> = ({style, gameStats, navigateToMenu}) => {
   // TODO: менять headerText и comment в зависимости от результата
   const headerText = 'ОТЛИЧНО';
 
@@ -28,7 +29,7 @@ const ModalGameOver: FC<Props> = ({style, gameStats}) => {
       <Text style={styles.text}>{gameStats.time}</Text>
       <Text style={styles.text}>{gameStats.difficulty}</Text>
       <Text style={[styles.text, styles.textDimmed]}>{comment}</Text>
-      <Button isPrimary text={'В МЕНЮ'} />
+      <Button isPrimary onClick={navigateToMenu} text={'В МЕНЮ'} />
     </ModalBase>
   );
 };
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     padding: 13,
     textAlign: 'center',
+    textTransform: 'uppercase',
   },
   textDimmed: {
     opacity: 0.5,

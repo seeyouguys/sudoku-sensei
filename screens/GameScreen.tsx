@@ -15,12 +15,14 @@ import Grid from '../components/Grid';
 import {getRandomBoard} from '../utils/SudokuSeeds';
 import NumPicker from '../components/NumPicker';
 import Timer from '../components/Timer';
+import ModalGameOver from '../components/ModalGameOver';
 
 const GameScreen: FC = ({navigation, route}) => {
   const [gridState, setGridState] = useState<string[][]>();
   const [errorsCounter, setErrorsCounter] = useState<number>(0);
   const [solution, setSolution] = useState<string[][]>();
   const [initialBoard, setInitialBoard] = useState<string[][]>();
+  const [showGameOver, setShowGameOver] = useState<Boolean>(false);
 
   const [numSelected, setNumSelected] = useState<string | null>(null);
   const [remainingNums, setRemainingNums] = useState<string[]>([
@@ -49,6 +51,7 @@ const GameScreen: FC = ({navigation, route}) => {
           return newGrid;
         }
       });
+      emptyCellsCounter.current -= 1;
     } else {
       // цифра не совпала с ответом
       setErrorsCounter(errorsCounter + 1);
@@ -57,6 +60,23 @@ const GameScreen: FC = ({navigation, route}) => {
     }
   };
 
+  // Посчитать пустые клетки,
+  const countEmptyCells = (board: string[][]): Number => {
+    // TODO: можно считать не только точки, но и цифры, чтобы убирать из выбора уже полностью использованные
+    return board.reduce((total, row, i) => {
+      return total + row.filter(x => x === '.').length;
+    }, 0);
+  };
+  // При каждом ходе это число декрементируется, когда оно будет равно нулю, игра закончится
+  const emptyCellsCounter = useRef<Number>(-1);
+
+  useEffect(() => {
+    if (emptyCellsCounter.current === 0) {
+      setShowGameOver(true);
+    }
+  }, [emptyCellsCounter.current]);
+
+  // Для анимации
   const gridRef = useRef();
   const errorsRef = useRef();
 
@@ -64,6 +84,9 @@ const GameScreen: FC = ({navigation, route}) => {
     // выбрать случайную головоломку и ее решение
     const level = route.params.level;
     const [_initialBoard, _solution] = getRandomBoard(level);
+
+    emptyCellsCounter.current = countEmptyCells(_initialBoard);
+
     setSolution(_solution);
     setInitialBoard(_initialBoard);
     setGridState(_initialBoard);
@@ -78,7 +101,7 @@ const GameScreen: FC = ({navigation, route}) => {
         resizeMode="repeat">
         <View style={styles.header}>
           <TouchableOpacity
-            onPress={() => navigation.goBack()}
+            onPress={navigation.goBack}
             style={styles.backButton}
           />
           <Timer style={styles.timer} />
@@ -105,6 +128,13 @@ const GameScreen: FC = ({navigation, route}) => {
           ОШИБОК: {errorsCounter}
         </Animatable.Text>
       </ImageBackground>
+
+      {showGameOver && (
+        <ModalGameOver
+          navigateToMenu={navigation.goBack}
+          gameStats={{difficulty: route.params.level, time: 'время хз'}}
+        />
+      )}
     </>
   );
 };
