@@ -1,10 +1,9 @@
-import React, {FC, useCallback, useMemo, useRef, useState} from 'react';
+import React, {FC, useMemo, useRef} from 'react';
 import {
   Animated,
   GestureResponderEvent,
   StyleSheet,
   Text,
-  TouchableWithoutFeedback,
   Vibration,
   View,
 } from 'react-native';
@@ -16,7 +15,7 @@ type Props = {
   remainingNums: string[];
 };
 
-const NumPicker: FC<Props> = ({remainingNums, setNumSelected, numSelected}) => {
+const NumPicker: FC<Props> = ({remainingNums, setNumSelected}) => {
   // Выяснить, над каким вариантом сейчас находится палец:
   // 1. Для этого считаем ширину одного option
   //    (ширину экрана делим на число оставшихся чисел).
@@ -43,7 +42,7 @@ const NumPicker: FC<Props> = ({remainingNums, setNumSelected, numSelected}) => {
     Vibration.vibrate(4);
   };
 
-  const touchX = useRef(new Animated.Value(0)).current;
+  const touchX = useRef(new Animated.Value(-100)).current;
   const touchLength = useRef(new Animated.Value(1)).current;
   const touchRadius = useRef(44).current;
 
@@ -106,14 +105,7 @@ const NumPicker: FC<Props> = ({remainingNums, setNumSelected, numSelected}) => {
       />
       {remainingNums.map((num, i) => (
         <View key={i}>
-          <View
-            style={[
-              styles.option,
-              // {
-              //   backgroundColor:
-              //     numSelected === num ? COLORS.accent : 'transparent',
-              // },
-            ]}>
+          <View style={styles.option}>
             <Text style={styles.optionText}>{num}</Text>
           </View>
         </View>
@@ -124,7 +116,6 @@ const NumPicker: FC<Props> = ({remainingNums, setNumSelected, numSelected}) => {
 
 const styles = StyleSheet.create({
   container: {
-    // width: SIZE.MAX_WIDTH,
     width: SIZE.MAX_WIDTH * 0.95,
     marginTop: 20,
     justifyContent: 'space-between',
