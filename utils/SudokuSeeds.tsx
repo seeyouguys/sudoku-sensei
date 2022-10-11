@@ -38,14 +38,64 @@ const matrixFromSeed = (seed: string): string[][] => {
   return matrix;
 };
 
+// // Перемешать переданные строки между друг другом
+// const shuffleRows = (rows: string[][]): string[][] => {
+//   return rows.sort(() => Math.random() - 0.5);
+// };
+
+// // Валидно только перемешивание в рамках трех строк (1-3, 4-6, 7-9)
+// const shuffleMatrix = (matrix: string[][]): string[][] => {
+//   return [
+//     shuffleRows(matrix.slice(0, 3)),
+//     shuffleRows(matrix.slice(3, 6)),
+//     shuffleRows(matrix.slice(6)),
+//   ].flat();
+// };
+
+// Поворот матрицы
+const rotateMatrix = (matrix: string[][]): string[][] => {
+  const n = matrix.length;
+
+  // Create a temporary matrix of size n x n
+  let t = Array.from(Array(n), () => Array.from(Array(n)));
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      // basically matrix[i][j] gets moved to [j][n - (i + 1)]
+      // e.g. matrix[0][0] => matrix[0][8] assuming 9x9 matrix
+      let ele = matrix[i][j];
+      let idx = n - (i + 1);
+
+      t[j][idx] = ele;
+    }
+  }
+  return t;
+};
+
+const applyRandomTransforms = (
+  matrix: string[][],
+  solution: string[][],
+): string[][][] => {
+  const choice = Math.random() * 10; // 0...10
+  console.log(choice);
+
+  if (choice > 6) {
+    return [matrix, solution];
+  } else if (choice > 3) {
+    return [rotateMatrix(matrix), rotateMatrix(solution)];
+  } else {
+    return [
+      rotateMatrix(rotateMatrix(matrix)),
+      rotateMatrix(rotateMatrix(solution)),
+    ];
+  }
+};
+
 // Взять случайный сид, модифицировать его и вернуть
 export type Level = 'easy' | 'medium' | 'hard' | 'evil';
 export const getRandomBoard = (level: Level): string[][][] => {
   const seedIdx: number = randomBetween(0, SEEDS[level].length - 1);
   const [seed, solution] = SEEDS[level][seedIdx];
-  // ...
-  // TODO: добавить модификации перед возвращением
-  // ...
 
-  return [matrixFromSeed(seed), matrixFromSeed(solution)];
+  return applyRandomTransforms(matrixFromSeed(seed), matrixFromSeed(solution));
 };
