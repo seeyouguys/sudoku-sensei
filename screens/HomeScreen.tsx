@@ -1,10 +1,11 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
 import React, {FC, useEffect, useState} from 'react';
-import {Image, ImageBackground, StyleSheet, View} from 'react-native';
+import {Image, ImageBackground, StyleSheet, View, Text} from 'react-native';
 import {pattern, sensei} from '../assets/Images';
 import Button from '../components/button';
 import ModalSelectLevel from '../components/ModalSelectLevel';
 import {COLORS, SIZE} from '../utils/constants';
+import {StatsContext} from '../utils/Contexts';
 import {Level} from '../utils/SudokuSeeds';
 
 // TODO: типизировать скрины
@@ -29,6 +30,20 @@ const HomeScreen: FC = ({navigation}) => {
         source={pattern}
         resizeMode="repeat">
         <Image style={styles.bgImage} source={sensei} resizeMode="cover" />
+
+        {/* <StatsContext.Consumer> */}
+        {/*   {stats => ( */}
+        {/*     <Text */}
+        {/*       style={{ */}
+        {/*         color: 'green', */}
+        {/*         backgroundColor: 'black', */}
+        {/*         position: 'absolute', */}
+        {/*       }}> */}
+        {/*       {JSON.stringify(stats, null, 2)} */}
+        {/*     </Text> */}
+        {/*   )} */}
+        {/* </StatsContext.Consumer> */}
+
         <Button onClick={onClickNewGame} isPrimary text="НОВАЯ" />
         <Button text="ПРОДОЛЖИТЬ" isDisabled />
 

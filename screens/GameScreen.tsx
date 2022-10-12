@@ -11,14 +11,17 @@ import {
   View,
 } from 'react-native';
 import {pattern} from '../assets/Images';
-import {COLORS, SIZE} from '../utils/constants';
+import {COLORS, displayedLevelName, SIZE} from '../utils/constants';
 import Grid from '../components/Grid';
 import {getRandomBoard} from '../utils/SudokuSeeds';
 import NumPicker from '../components/NumPicker';
 import Timer from '../components/Timer';
 import ModalGameOver from '../components/ModalGameOver';
+import {PlayerStats} from '../utils/Contexts';
+import {Level} from '../utils/SudokuSeeds';
+import {StatsContext} from '../utils/Contexts';
 
-const GameScreen: FC = ({navigation, route}) => {
+const GameScreen: FC = ({navigation, route, setStats}) => {
   const [gridState, setGridState] = useState<string[][]>();
   const [errorsCounter, setErrorsCounter] = useState<number>(0);
   const [solution, setSolution] = useState<string[][]>();
@@ -72,8 +75,27 @@ const GameScreen: FC = ({navigation, route}) => {
   const emptyCellsCounter = useRef<Number>(-1);
 
   useEffect(() => {
+    // Конец игры, победа
     if (emptyCellsCounter.current === 0) {
       setShowGameOver(true);
+
+      // Добавить победу в статистику
+      const level: Level = route.params.level;
+
+      setStats((prevStats: PlayerStats) => {
+        const condition = prevStats.maxLevel === level;
+        return {
+          ...prevStats,
+          [level]: {
+            bestTime: '0:00', // TODO: обновлять лучшее время
+            wins: prevStats[level].wins + 1,
+          },
+          winsToLevelUpCounter: condition
+            ? prevStats.winsToLevelUpCounter + 1
+            : prevStats.winsToLevelUpCounter,
+          // maxLevel: 'easy',
+        };
+      });
     }
   }, [emptyCellsCounter.current]);
 
@@ -111,6 +133,10 @@ const GameScreen: FC = ({navigation, route}) => {
             style={styles.backButton}
           />
           <Timer style={styles.timer} />
+
+          <Text style={styles.text}>
+            {displayedLevelName(route.params.level)}
+          </Text>
         </View>
 
         {gridState && initialBoard && (
@@ -176,7 +202,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: COLORS.primary,
-    padding: 25,
+    padding: 15,
     fontFamily: 'Roboto',
     letterSpacing: 4,
     fontWeight: 'semibold',
