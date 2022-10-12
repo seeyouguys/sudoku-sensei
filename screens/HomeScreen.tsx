@@ -4,6 +4,7 @@ import {Image, ImageBackground, StyleSheet, View, Text} from 'react-native';
 import {pattern, sensei} from '../assets/Images';
 import Button from '../components/button';
 import ModalSelectLevel from '../components/ModalSelectLevel';
+import RankPlate from '../components/RankPlate';
 import {COLORS, SIZE} from '../utils/constants';
 import {StatsContext} from '../utils/Contexts';
 import {Level} from '../utils/SudokuSeeds';
@@ -30,6 +31,7 @@ const HomeScreen: FC = ({navigation}) => {
         source={pattern}
         resizeMode="repeat">
         <Image style={styles.bgImage} source={sensei} resizeMode="cover" />
+        <RankPlate style={styles.rankPlate} />
 
         {/* <StatsContext.Consumer> */}
         {/*   {stats => ( */}
@@ -76,6 +78,12 @@ const styles = StyleSheet.create({
     width: SIZE.MAX_WIDTH,
     height: SIZE.MAX_HEIGHT / 1.5,
     borderWidth: 1,
+  },
+  rankPlate: {
+    position: 'absolute',
+    top: 60,
+    left: 0,
+    zIndex: 2,
   },
 });
 
