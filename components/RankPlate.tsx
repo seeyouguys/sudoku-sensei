@@ -23,7 +23,7 @@ const RankPlate: FC<Props> = ({style}) => {
 
 const styles = StyleSheet.create({
   row1: {
-    fontWeight: 'normal', // TODO: light
+    fontWeight: 'normal',
     color: COLORS.bgDark,
   },
   row2: {
