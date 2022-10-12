@@ -11,6 +11,7 @@ type GameStatsObj = {
 };
 
 type Props = {
+  result: 'win' | 'lose';
   style?: object;
   gameStats: GameStatsObj;
   navigateToMenu: () => void;
@@ -19,9 +20,13 @@ type Props = {
 // Пример использования
 // <ModalGameOver gameStats={{time: '1:39', difficulty: 'МАСТЕР'}} />
 
-const ModalGameOver: FC<Props> = ({style, gameStats, navigateToMenu}) => {
-  // TODO: менять headerText и comment в зависимости от результата
-  const headerText = 'ОТЛИЧНО';
+const ModalGameOver: FC<Props> = ({
+  style,
+  gameStats,
+  navigateToMenu,
+  result,
+}) => {
+  const headerText = result === 'win' ? 'ОТЛИЧНО' : 'ПОРАЖЕНИЕ';
 
   const makeComment = (stats: PlayerStats): string => {
     const needComment =

@@ -24,6 +24,7 @@ import {StatsContext} from '../utils/Contexts';
 const GameScreen: FC = ({navigation, route, setStats}) => {
   const [gridState, setGridState] = useState<string[][]>();
   const [errorsCounter, setErrorsCounter] = useState<number>(0);
+  const MAX_ERRORS = useRef(3).current;
   const [solution, setSolution] = useState<string[][]>();
   const [initialBoard, setInitialBoard] = useState<string[][]>();
   const [showGameOver, setShowGameOver] = useState<Boolean>(false);
@@ -63,6 +64,12 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
       errorsRef.current.tada();
     }
   };
+
+  useEffect(() => {
+    if (errorsCounter > MAX_ERRORS) {
+      setShowGameOver(true);
+    }
+  }, [errorsCounter]);
 
   // Посчитать пустые клетки,
   const countEmptyCells = (board: string[][]): Number => {
@@ -157,12 +164,13 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
         />
 
         <Animatable.Text ref={errorsRef} style={styles.text}>
-          ОШИБОК: {errorsCounter}
+          ОШИБОК: {errorsCounter}/{MAX_ERRORS}
         </Animatable.Text>
       </ImageBackground>
 
       {showGameOver && (
         <ModalGameOver
+          result={errorsCounter > MAX_ERRORS ? 'lose' : 'win'}
           navigateToMenu={navigation.goBack}
           gameStats={{difficulty: route.params.level, time: 'время хз'}}
         />
