@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
   text: {
     color: COLORS.primary,
     fontFamily: 'Roboto',
-    letterSpacing: 4,
-    fontWeight: 'semibold',
+    letterSpacing: 3,
+    fontWeight: 'bold',
     fontSize: 14,
     padding: 13,
     textAlign: 'center',

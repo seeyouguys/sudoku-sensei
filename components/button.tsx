@@ -11,9 +11,11 @@ type Props = {
 
 const Button: FC<Props> = ({text, isPrimary, onClick, isDisabled}) => {
   const style = [];
+  const styleText = [styles.text];
 
   if (isPrimary) {
     style.push(styles.primaryButton);
+    styleText.push(styles.textBold);
   }
 
   if (isDisabled) {
@@ -22,7 +24,7 @@ const Button: FC<Props> = ({text, isPrimary, onClick, isDisabled}) => {
 
   return (
     <TouchableOpacity onPress={onClick} disabled={isDisabled} style={style}>
-      <Text style={styles.text}>{text}</Text>
+      <Text style={styleText}>{text}</Text>
       {isDisabled && <View style={styles.line} />}
     </TouchableOpacity>
   );
@@ -42,8 +44,12 @@ const styles = StyleSheet.create({
     padding: 14,
     fontFamily: 'Roboto',
     letterSpacing: 4,
-    fontWeight: 'semibold',
+    // fontWeight: 'bold',
     fontSize: 14,
+  },
+  textBold: {
+    fontWeight: 'bold',
+    letterSpacing: 3,
   },
   line: {
     width: 170,

@@ -211,9 +211,10 @@ const styles = StyleSheet.create({
   text: {
     color: COLORS.primary,
     padding: 15,
+    paddingTop: 10,
     fontFamily: 'Roboto',
     letterSpacing: 4,
-    fontWeight: 'semibold',
+    // fontWeight: 'bold',
     fontSize: 14,
   },
   footerButtons: {

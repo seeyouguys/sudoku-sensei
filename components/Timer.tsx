@@ -38,18 +38,18 @@ const Timer: FC<Props> = ({style}) => {
 const styles = StyleSheet.create({
   pad: {
     backgroundColor: COLORS.accent,
-    width: 180,
+    width: 160,
     height: 80,
     alignItems: 'center',
     justifyContent: 'flex-end',
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
-    paddingBottom: 5,
+    paddingBottom: 11,
   },
   time: {
     color: COLORS.bgDark,
-    fontWeight: 'bold',
-    fontSize: 50,
+    fontFamily: 'BebasNums',
+    fontSize: 65,
   },
 });
 
