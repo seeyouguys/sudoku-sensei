@@ -13,3 +13,12 @@ export const SIZE = {
   MAX_WIDTH: Dimensions.get('screen').width,
   MAX_HEIGHT: Dimensions.get('screen').height,
 };
+
+export const displayedLevelName = level => {
+  return {
+    easy: 'УЧЕНИК',
+    medium: 'МАСТЕР',
+    hard: 'МУДРЕЦ',
+    evil: 'СЕНСЕЙ',
+  }[level];
+};
