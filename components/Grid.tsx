@@ -1,12 +1,5 @@
-import React, {FC, useCallback, useEffect, useRef} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import React, {FC} from 'react';
+import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import {COLORS, SIZE} from '../utils/constants';
 
 // ##################################### GRID ##################################

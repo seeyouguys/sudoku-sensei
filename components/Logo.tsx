@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import * as Animatable from 'react-native-animatable';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {COLORS, SIZE} from '../utils/constants';
 
 interface Props {
@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontFamily: 'Roboto',
     letterSpacing: 0.5,
-    // fontWeight: 'bold',
     fontSize: 35,
     lineHeight: 37,
   },

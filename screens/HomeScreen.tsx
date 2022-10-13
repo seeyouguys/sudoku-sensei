@@ -1,14 +1,11 @@
-import {NavigatorScreenParams} from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
-import React, {FC, useEffect, useState} from 'react';
-import {Image, ImageBackground, StyleSheet, View, Text} from 'react-native';
+import React, {FC, useState} from 'react';
+import {ImageBackground, StyleSheet, View} from 'react-native';
 import {pattern, sensei} from '../assets/Images';
 import Button from '../components/button';
 import Logo from '../components/Logo';
 import ModalSelectLevel from '../components/ModalSelectLevel';
-import RankPlate from '../components/RankPlate';
 import {COLORS, SIZE} from '../utils/constants';
-import {StatsContext} from '../utils/Contexts';
 import {Level} from '../utils/SudokuSeeds';
 
 // TODO: типизировать скрины
@@ -43,19 +40,6 @@ const HomeScreen: FC = ({navigation}) => {
         />
 
         <Logo style={styles.logo} />
-
-        {/* <StatsContext.Consumer> */}
-        {/*   {stats => ( */}
-        {/*     <Text */}
-        {/*       style={{ */}
-        {/*         color: 'green', */}
-        {/*         backgroundColor: 'black', */}
-        {/*         position: 'absolute', */}
-        {/*       }}> */}
-        {/*       {JSON.stringify(stats, null, 2)} */}
-        {/*     </Text> */}
-        {/*   )} */}
-        {/* </StatsContext.Consumer> */}
 
         <Button onClick={onClickNewGame} isPrimary text="НОВАЯ" />
         <Button text="ПРОДОЛЖИТЬ" isDisabled />

@@ -1,22 +1,12 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {
-  useAsyncStorage,
-  AsyncStorage,
-} from '@react-native-async-storage/async-storage';
-import React, {FC, useState, useEffect, createContext} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  StatusBar,
-} from 'react-native';
+import {useAsyncStorage} from '@react-native-async-storage/async-storage';
+import React, {FC, useState, useEffect} from 'react';
+import {StyleSheet, View, StatusBar} from 'react-native';
 import GameScreen from './screens/GameScreen';
 import HomeScreen from './screens/HomeScreen';
 import {COLORS} from './utils/constants';
 import {defaultPlayerStats, PlayerStats, StatsContext} from './utils/Contexts';
-import {Level} from './utils/SudokuSeeds';
 
 const Stack = createNativeStackNavigator();
 
@@ -50,7 +40,6 @@ const App: FC = () => {
   // Когда поменялся stats, сохранять это в AsyncStorage
   useEffect(() => {
     if (stats) {
-      console.log('stats обновлен');
       const updates = checkIfNewLevelAvailable(stats);
       if (updates) {
         setStats(prevStats => {

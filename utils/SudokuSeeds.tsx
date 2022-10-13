@@ -254,7 +254,5 @@ export const getRandomBoard = (level: Level): string[][][] => {
   const seedIdx: number = randomBetween(0, SEEDS[level].length - 1);
   const [seed, solution] = SEEDS[level][seedIdx];
 
-  console.log(seed);
-  console.log(solution);
   return applyRandomTransforms(matrixFromSeed(seed), matrixFromSeed(solution));
 };

@@ -1,10 +1,7 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import * as Animatable from 'react-native-animatable';
 import {
-  Animated,
-  Easing,
   ImageBackground,
-  InteractionManager,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -19,7 +16,6 @@ import Timer, {Time} from '../components/Timer';
 import ModalGameOver from '../components/ModalGameOver';
 import {PlayerStats} from '../utils/Contexts';
 import {Level} from '../utils/SudokuSeeds';
-import {StatsContext} from '../utils/Contexts';
 
 const GameScreen: FC = ({navigation, route, setStats}) => {
   const [gridState, setGridState] = useState<string[][]>();
