@@ -1,4 +1,4 @@
-import React, {FC, useMemo, useRef} from 'react';
+import React, {FC, useMemo, useRef, useEffect} from 'react';
 import {
   Animated,
   GestureResponderEvent,
@@ -41,6 +41,14 @@ const NumPicker: FC<Props> = ({remainingNums, setNumSelected}) => {
   const microVibration = () => {
     Vibration.vibrate(4);
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      const selectedFromStart = remainingNums[4];
+      setNumSelected(selectedFromStart);
+      animSpringTo(optionWidth * 4.5);
+    }, 100);
+  }, []);
 
   const touchX = useRef(new Animated.Value(-100)).current;
   const touchLength = useRef(new Animated.Value(1)).current;
