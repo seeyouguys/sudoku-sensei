@@ -1,17 +1,48 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {COLORS} from '../utils/constants';
 
-type Props = {
-  style: object;
+export type Time = {
+  minutes: number;
+  seconds: number;
 };
 
-const Timer: FC<Props> = ({style}) => {
+type Props = {
+  style: object;
+  passTimeToParent: (time: Time) => void;
+  initialTime?: Time;
+  shouldRun: boolean;
+};
+
+const Timer: FC<Props> = ({
+  style,
+  passTimeToParent,
+  initialTime,
+  shouldRun,
+}) => {
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
+  const interval = useRef<number>();
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    if (shouldRun) {
+      start(initialTime);
+    } else {
+      stop();
+      passTimeToParent({minutes, seconds});
+    }
+    return () => {
+      stop();
+    };
+  }, [shouldRun]);
+
+  const start = (initialTime: Time) => {
+    if (initialTime) {
+      setMinutes(min);
+      setSeconds(sec);
+    }
+
+    interval.current = setInterval(() => {
       setSeconds(sec => {
         if (sec === 59) {
           setMinutes(min => min + 1);
@@ -20,11 +51,11 @@ const Timer: FC<Props> = ({style}) => {
         return sec + 1;
       });
     }, 1000);
+  };
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+  const stop = () => {
+    clearInterval(interval.current);
+  };
 
   return (
     <View style={[styles.pad, style]}>

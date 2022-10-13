@@ -15,7 +15,7 @@ import {COLORS, displayedLevelName, SIZE} from '../utils/constants';
 import Grid from '../components/Grid';
 import {getRandomBoard} from '../utils/SudokuSeeds';
 import NumPicker from '../components/NumPicker';
-import Timer from '../components/Timer';
+import Timer, {Time} from '../components/Timer';
 import ModalGameOver from '../components/ModalGameOver';
 import {PlayerStats} from '../utils/Contexts';
 import {Level} from '../utils/SudokuSeeds';
@@ -28,6 +28,7 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
   const [solution, setSolution] = useState<string[][]>();
   const [initialBoard, setInitialBoard] = useState<string[][]>();
   const [showGameOver, setShowGameOver] = useState<Boolean>(false);
+  const [timerShouldRun, setTimerShouldRun] = useState<boolean>(true);
 
   const [numSelected, setNumSelected] = useState<string | null>(null);
   const [remainingNums, setRemainingNums] = useState<string[]>([
@@ -41,6 +42,7 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
     '8',
     '9',
   ]);
+  const [time, setTime] = useState<Time | null>(null);
 
   // попытаться поставить цифру num в клетку c координатами r-c
   const trySetNumber = (num: string | null, r: number, c: number): void => {
@@ -51,6 +53,7 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
       // если цифра совпала с ответом, поставить цифру в клетку
       setGridState(prevGrid => {
         if (prevGrid) {
+          // TODO: это не так делается, просто используй спред-оператор
           const newGrid = prevGrid.map(row => row.slice()); // deep-copy
           newGrid[r][c] = num;
           return newGrid;
@@ -67,6 +70,7 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
 
   useEffect(() => {
     if (errorsCounter > MAX_ERRORS) {
+      setTimerShouldRun(false);
       setShowGameOver(true);
     }
   }, [errorsCounter]);
@@ -84,27 +88,31 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
   useEffect(() => {
     // Конец игры, победа
     if (emptyCellsCounter.current === 0) {
+      setTimerShouldRun(false);
       setShowGameOver(true);
 
-      // Добавить победу в статистику
-      const level: Level = route.params.level;
+      // time приходит не сразу
+      if (time) {
+        // Добавить победу в статистику
+        const level: Level = route.params.level;
 
-      setStats((prevStats: PlayerStats) => {
-        const condition = prevStats.maxLevel === level;
-        return {
-          ...prevStats,
-          [level]: {
-            bestTime: '0:00', // TODO: обновлять лучшее время
-            wins: prevStats[level].wins + 1,
-          },
-          winsToLevelUpCounter: condition
-            ? prevStats.winsToLevelUpCounter + 1
-            : prevStats.winsToLevelUpCounter,
-          // maxLevel: 'easy',
-        };
-      });
+        setStats((prevStats: PlayerStats) => {
+          const condition = prevStats.maxLevel === level && time.minutes < 10;
+          return {
+            ...prevStats,
+            [level]: {
+              bestTime: '0:00', // TODO: обновлять лучшее время
+              wins: prevStats[level].wins + 1,
+            },
+            winsToLevelUpCounter: condition
+              ? prevStats.winsToLevelUpCounter + 1
+              : prevStats.winsToLevelUpCounter,
+            // maxLevel: 'easy',
+          };
+        });
+      }
     }
-  }, [emptyCellsCounter.current]);
+  }, [emptyCellsCounter.current, time]);
 
   // Для анимации
   const gridRef = useRef();
@@ -139,7 +147,11 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
             onPress={navigation.goBack}
             style={styles.backButton}
           />
-          <Timer style={styles.timer} />
+          <Timer
+            shouldRun={timerShouldRun}
+            passTimeToParent={setTime}
+            style={styles.timer}
+          />
 
           <Text style={styles.text}>
             {displayedLevelName(route.params.level)}
@@ -171,11 +183,17 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
         </Animatable.Text>
       </ImageBackground>
 
+      {/* TODO: метод toString для Time вместо этого тернарного */}
       {showGameOver && (
         <ModalGameOver
           result={errorsCounter > MAX_ERRORS ? 'lose' : 'win'}
           navigateToMenu={navigation.goBack}
-          gameStats={{difficulty: route.params.level, time: 'время хз'}}
+          gameStats={{
+            difficulty: route.params.level,
+            time: `${time?.minutes}:${
+              time?.seconds > 9 ? time?.seconds : '0' + time?.seconds
+            }`,
+          }}
         />
       )}
     </>
