@@ -13,12 +13,14 @@ const ModalBase: FC<Props> = ({style, children, headerText}) => {
   return (
     <Animatable.View
       duration={300}
+      useNativeDriver={true}
       animation={'fadeIn'}
       style={[styles.dim, style]}>
       <View style={styles.container}>
         <Animatable.View
           duration={500}
           animation={'flipInX'}
+          useNativeDriver={true}
           style={styles.header}>
           <Text style={styles.text}>{headerText}</Text>
         </Animatable.View>

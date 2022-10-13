@@ -147,7 +147,7 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
         </View>
 
         {gridState && initialBoard && (
-          <Animatable.View ref={gridRef}>
+          <Animatable.View useNativeDriver={true} ref={gridRef}>
             <Grid
               gridState={gridState}
               numSelected={numSelected}
@@ -163,7 +163,10 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
           numSelected={numSelected}
         />
 
-        <Animatable.Text ref={errorsRef} style={styles.text}>
+        <Animatable.Text
+          useNativeDriver={true}
+          ref={errorsRef}
+          style={styles.text}>
           ОШИБОК: {errorsCounter}/{MAX_ERRORS}
         </Animatable.Text>
       </ImageBackground>
