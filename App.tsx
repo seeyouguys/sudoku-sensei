@@ -5,7 +5,13 @@ import {
   AsyncStorage,
 } from '@react-native-async-storage/async-storage';
 import React, {FC, useState, useEffect, createContext} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  StatusBar,
+} from 'react-native';
 import GameScreen from './screens/GameScreen';
 import HomeScreen from './screens/HomeScreen';
 import {COLORS} from './utils/constants';
@@ -78,18 +84,21 @@ const App: FC = () => {
 
   if (stats) {
     return (
-      <View style={styles.bg}>
-        <StatsContext.Provider value={stats}>
-          <NavigationContainer>
-            <Stack.Navigator screenOptions={{headerShown: false}}>
-              <Stack.Screen name="Home" component={HomeScreen} />
-              <Stack.Screen name="Game">
-                {props => <GameScreen {...props} setStats={setStats} />}
-              </Stack.Screen>
-            </Stack.Navigator>
-          </NavigationContainer>
-        </StatsContext.Provider>
-      </View>
+      <>
+        <StatusBar backgroundColor="#101010" />
+        <View style={styles.bg}>
+          <StatsContext.Provider value={stats}>
+            <NavigationContainer>
+              <Stack.Navigator screenOptions={{headerShown: false}}>
+                <Stack.Screen name="Home" component={HomeScreen} />
+                <Stack.Screen name="Game">
+                  {props => <GameScreen {...props} setStats={setStats} />}
+                </Stack.Screen>
+              </Stack.Navigator>
+            </NavigationContainer>
+          </StatsContext.Provider>
+        </View>
+      </>
     );
   }
 };
