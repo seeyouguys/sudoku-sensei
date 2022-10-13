@@ -1,4 +1,5 @@
 import React, {FC} from 'react';
+import * as Animatable from 'react-native-animatable';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {COLORS, SIZE} from '../utils/constants';
 
@@ -10,9 +11,21 @@ const Logo: FC<Props> = ({style}) => {
   return (
     <View style={[styles.container, style]}>
       <View style={styles.line}>
-        <Text style={[styles.text, styles.row1]}>СУДОКУ</Text>
+        <Animatable.Text
+          animation="bounceInLeft"
+          duration={1100}
+          useNativeDriver={true}
+          style={[styles.text, styles.row1]}>
+          СУДОКУ
+        </Animatable.Text>
       </View>
-      <Text style={[styles.text, styles.row2]}>СЕНСЕИ</Text>
+      <Animatable.Text
+        animation="bounceInRight"
+        duration={1100}
+        useNativeDriver={true}
+        style={[styles.text, styles.row2]}>
+        СЕНСЕИ
+      </Animatable.Text>
     </View>
   );
 };
