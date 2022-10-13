@@ -25,7 +25,16 @@ const NumPicker: FC<Props> = ({remainingNums, setNumSelected}) => {
   //    option и округляем. (~~ — это отбрасывание чисел после запятой)
   // 3. Получившееся число — это индекс выбранного элемента в массиве remainingNums
   const optionWidth = useMemo(() => {
-    return ~~((SIZE.MAX_WIDTH * 0.95) / remainingNums.length);
+    return ~~(SIZE.MAX_WIDTH / remainingNums.length);
+  }, [remainingNums.length]);
+
+  // Когда убрались лишние цифры, подкорректировать положение touch
+  useEffect(() => {
+    if (remainingNums && remainingNums.length < 9) {
+      const newSelected = remainingNums[0];
+      setNumSelected(newSelected);
+      animSpringTo(optionWidth * 0.5);
+    }
   }, [remainingNums.length]);
 
   const roundToNearestX = x => {
@@ -113,7 +122,7 @@ const NumPicker: FC<Props> = ({remainingNums, setNumSelected}) => {
       />
       {remainingNums.map((num, i) => (
         <View key={i}>
-          <View style={styles.option}>
+          <View style={[styles.option, {width: optionWidth}]}>
             <Text style={styles.optionText}>{num}</Text>
           </View>
         </View>
@@ -124,11 +133,9 @@ const NumPicker: FC<Props> = ({remainingNums, setNumSelected}) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: SIZE.MAX_WIDTH * 0.95,
+    width: SIZE.MAX_WIDTH,
     marginTop: 20,
-    justifyContent: 'space-between',
     flexDirection: 'row',
-    flexWrap: 'wrap',
     alignItems: 'center',
   },
   touch: {
@@ -137,7 +144,8 @@ const styles = StyleSheet.create({
   },
   option: {
     borderRadius: 100,
-    padding: 12,
+    padding: 0,
+    alignItems: 'center',
   },
   optionText: {
     color: COLORS.primary,

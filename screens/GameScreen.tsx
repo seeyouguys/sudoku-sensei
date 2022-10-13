@@ -24,7 +24,7 @@ import {StatsContext} from '../utils/Contexts';
 const GameScreen: FC = ({navigation, route, setStats}) => {
   const [gridState, setGridState] = useState<string[][]>();
   const [errorsCounter, setErrorsCounter] = useState<number>(0);
-  const MAX_ERRORS = useRef(3).current;
+  const MAX_ERRORS = useRef(2).current;
   const [solution, setSolution] = useState<string[][]>();
   const [initialBoard, setInitialBoard] = useState<string[][]>();
   const [showGameOver, setShowGameOver] = useState<Boolean>(false);
@@ -59,7 +59,9 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
           return newGrid;
         }
       });
-      emptyCellsCounter.current -= 1;
+      cellsCounter.current[0] -= 1;
+      cellsCounter.current[num] += 1;
+      checkRemainingNums(num);
     } else {
       // цифра не совпала с ответом
       setErrorsCounter(errorsCounter + 1);
@@ -75,19 +77,38 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
     }
   }, [errorsCounter]);
 
-  // Посчитать пустые клетки,
-  const countEmptyCells = (board: string[][]): Number => {
-    // TODO: можно считать не только точки, но и цифры, чтобы убирать из выбора уже полностью использованные
-    return board.reduce((total, row, i) => {
-      return total + row.filter(x => x === '.').length;
-    }, 0);
+  // Посчитать содержимое клеток (сколько изначально единиц, двоек...),
+  const countCells = (board: string[][]): number[] => {
+    // 0-я цифра — число пустых клеток, 1-я число единиц, 2-я число двоек, и т.д.
+    const cellsCounter = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    board.forEach(row => {
+      row.forEach(x => {
+        x === '.'
+          ? (cellsCounter[0] = cellsCounter[0] + 1)
+          : (cellsCounter[+x] = cellsCounter[+x] + 1);
+      });
+    });
+
+    return cellsCounter;
   };
-  // При каждом ходе это число декрементируется, когда оно будет равно нулю, игра закончится
-  const emptyCellsCounter = useRef<Number>(-1);
+
+  const cellsCounter = useRef<number[]>([
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+  ]);
+
+  // Если какая-то цифра выставлена на поле 9 раз, то убрать ее из списка оставшихся цифр
+  const checkRemainingNums = (num: number | string) => {
+    if (cellsCounter.current[+num] === 9) {
+      setRemainingNums(prev => {
+        return prev.filter(x => x !== '' + num);
+      });
+    }
+  };
 
   useEffect(() => {
-    // Конец игры, победа
-    if (emptyCellsCounter.current === 0) {
+    // Когда на поле не осталось пустых клеток — конец игры, победа
+    if (cellsCounter.current && cellsCounter.current[0] === 0) {
       setTimerShouldRun(false);
       setShowGameOver(true);
 
@@ -112,7 +133,7 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
         });
       }
     }
-  }, [emptyCellsCounter.current, time]);
+  }, [cellsCounter.current[0], time]);
 
   // Для анимации
   const gridRef = useRef();
@@ -125,7 +146,7 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
       const level = route.params.level;
       const [_initialBoard, _solution] = getRandomBoard(level);
 
-      emptyCellsCounter.current = countEmptyCells(_initialBoard);
+      cellsCounter.current = countCells(_initialBoard);
 
       setSolution(_solution);
       setInitialBoard(_initialBoard);
