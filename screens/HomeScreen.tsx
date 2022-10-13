@@ -1,8 +1,10 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable';
 import React, {FC, useEffect, useState} from 'react';
 import {Image, ImageBackground, StyleSheet, View, Text} from 'react-native';
 import {pattern, sensei} from '../assets/Images';
 import Button from '../components/button';
+import Logo from '../components/Logo';
 import ModalSelectLevel from '../components/ModalSelectLevel';
 import RankPlate from '../components/RankPlate';
 import {COLORS, SIZE} from '../utils/constants';
@@ -30,8 +32,17 @@ const HomeScreen: FC = ({navigation}) => {
         style={styles.container}
         source={pattern}
         resizeMode="repeat">
-        <Image style={styles.bgImage} source={sensei} resizeMode="cover" />
-        <RankPlate style={styles.rankPlate} />
+        <Animatable.Image
+          animation="pulse"
+          iterationCount="infinite"
+          duration={15000}
+          useNativeDriver={true}
+          style={styles.bgImage}
+          source={sensei}
+          resizeMode="cover"
+        />
+
+        <Logo style={styles.logo} />
 
         {/* <StatsContext.Consumer> */}
         {/*   {stats => ( */}
@@ -76,14 +87,14 @@ const styles = StyleSheet.create({
   },
   bgImage: {
     width: SIZE.MAX_WIDTH,
-    height: SIZE.MAX_HEIGHT / 1.5,
-    borderWidth: 1,
-  },
-  rankPlate: {
+    height: SIZE.MAX_HEIGHT,
     position: 'absolute',
-    top: 60,
-    left: 0,
-    zIndex: 2,
+    borderWidth: 1,
+    opacity: 0.5,
+  },
+  logo: {
+    marginTop: 230,
+    marginBottom: 150,
   },
 });
 
