@@ -29,6 +29,10 @@ const ModalGameOver: FC<Props> = ({
   const headerText = result === 'win' ? 'ОТЛИЧНО' : 'ПОРАЖЕНИЕ';
 
   const makeComment = (stats: PlayerStats): string => {
+    if (result === 'lose') {
+      return 'ИНОЕ ПОРАЖЕНИЕ ЗНАЧИТ БОЛЬШЕ, ЧЕМ ПОБЕДА';
+    }
+
     const needComment =
       gameStats.difficulty === stats.maxLevel && stats.maxLevel !== 'evil';
     if (needComment) {
@@ -53,7 +57,7 @@ const ModalGameOver: FC<Props> = ({
 
       // Множественная форма слова "раз"
       const times = [2, 3, 4].includes(gamesToLevelUp) ? 'РАЗА' : 'РАЗ';
-      return `ПРОЙДИ ЕЩЕ ${gamesToLevelUp} ${times}\n за 10:00, ЧТОБЫ ОТКРЫТЬ СЛОЖНОСТЬ\n${nextLevel}`;
+      return `ПРОЙДИ ЕЩЕ ${gamesToLevelUp} ${times}\n за 7:00, ЧТОБЫ ОТКРЫТЬ СЛОЖНОСТЬ\n${nextLevel}`;
     } else {
       return 'ПРАКТИКА ВЕДЕТ К СОВЕРШЕНСТВУ';
     }

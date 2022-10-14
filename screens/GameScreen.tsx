@@ -114,7 +114,7 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
         const level: Level = route.params.level;
 
         setStats((prevStats: PlayerStats) => {
-          const condition = prevStats.maxLevel === level && time.minutes < 10;
+          const condition = prevStats.maxLevel === level && time.minutes < 7;
           return {
             ...prevStats,
             [level]: {
