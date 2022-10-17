@@ -1,4 +1,4 @@
-package com.sudokuapp.newarchitecture;
+package com.mitutoyogames.sudokusensei.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.sudokuapp.BuildConfig;
-import com.sudokuapp.newarchitecture.components.MainComponentsRegistry;
-import com.sudokuapp.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.mitutoyogames.sudokusensei.BuildConfig;
+import com.mitutoyogames.sudokusensei.newarchitecture.components.MainComponentsRegistry;
+import com.mitutoyogames.sudokusensei.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

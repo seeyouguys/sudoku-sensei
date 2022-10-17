@@ -1,4 +1,4 @@
-package com.sudokuapp.newarchitecture.components;
+package com.mitutoyogames.sudokusensei.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

@@ -1,4 +1,4 @@
-package com.sudokuapp.newarchitecture.modules;
+package com.mitutoyogames.sudokusensei.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;
