@@ -1,6 +1,6 @@
 import * as Animatable from 'react-native-animatable';
 import React, {FC, useState} from 'react';
-import {ImageBackground, StyleSheet, View} from 'react-native';
+import {ImageBackground, NativeModules, StyleSheet, View} from 'react-native';
 import {pattern, sensei} from '../assets/Images';
 import Button from '../components/button';
 import Logo from '../components/Logo';
@@ -23,6 +23,10 @@ const HomeScreen: FC = ({navigation}) => {
     setShowSelectLevel(false);
   };
 
+  // Работа с Yandex SDK через нативные модули
+  const {RewardedAdModule} = NativeModules;
+  const showRewardedAd = () => RewardedAdModule.openAdActivity();
+
   return (
     <>
       <ImageBackground
@@ -38,11 +42,10 @@ const HomeScreen: FC = ({navigation}) => {
           source={sensei}
           resizeMode="cover"
         />
-
         <Logo style={styles.logo} />
-
         <Button onClick={onClickNewGame} isPrimary text="НОВАЯ" />
         <Button text="ПРОДОЛЖИТЬ" isDisabled />
+        <Button text="ПОДСКАЗКИ (0)" onClick={() => showRewardedAd()} />
 
         <View style={styles.footerButtons}>
           <Button isDisabled text="НАСТРОЙКИ" />
