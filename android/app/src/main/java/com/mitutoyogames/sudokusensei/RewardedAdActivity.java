@@ -26,8 +26,8 @@ import java.util.HashMap;
 
 public class RewardedAdActivity extends Activity {
   //...
- private static final String BLOCK_ID = "R-M-DEMO-rewarded-client-side-rtb";
-  // private static final String BLOCK_ID = "R-M-1608516-1";
+ // private static final String BLOCK_ID = "R-M-DEMO-rewarded-client-side-rtb";
+  private static final String BLOCK_ID = "R-M-1994039-1";
 
   private RewardedAd mRewardedAd;
   @Override
