@@ -1,9 +1,10 @@
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, {FC, useEffect, useRef, useState, useContext} from 'react';
 import * as Animatable from 'react-native-animatable';
 import {
   ImageBackground,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -14,7 +15,7 @@ import {getRandomBoard} from '../utils/SudokuSeeds';
 import NumPicker from '../components/NumPicker';
 import Timer, {Time} from '../components/Timer';
 import ModalGameOver from '../components/ModalGameOver';
-import {PlayerStats} from '../utils/Contexts';
+import {PlayerStats, StatsContext} from '../utils/Contexts';
 import {Level} from '../utils/SudokuSeeds';
 
 const GameScreen: FC = ({navigation, route, setStats}) => {
@@ -25,6 +26,7 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
   const [initialBoard, setInitialBoard] = useState<string[][]>();
   const [showGameOver, setShowGameOver] = useState<Boolean>(false);
   const [timerShouldRun, setTimerShouldRun] = useState<boolean>(true);
+  const {hints} = useContext(StatsContext);
 
   const [numSelected, setNumSelected] = useState<string | null>(null);
   const [remainingNums, setRemainingNums] = useState<string[]>([
@@ -39,6 +41,29 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
     '9',
   ]);
   const [time, setTime] = useState<Time | null>(null);
+
+  // Открывает случайную клетку на поле (подсказка)
+  const openRandomCell = () => {
+    // найти координаты первой неоткрытой цифры (.),
+    const r = gridState.findIndex(row => row.includes('.'));
+    const c = gridState[r].findIndex(num => num === '.');
+
+    // посмотреть, что находится в solution с этим индексом
+    const num = solution[r][c];
+
+    // поставить правильную цифру
+    trySetNumber(num, r, c);
+  };
+
+  // Хэндлер нажатия на кнопку "подсказка"
+  const onHintPress = e => {
+    if (hints) {
+      openRandomCell();
+      setStats(prev => ({...prev, hints: prev.hints - 1}));
+    } else {
+      ToastAndroid.show('Нет подсказок', ToastAndroid.SHORT);
+    }
+  };
 
   // попытаться поставить цифру num в клетку c координатами r-c
   const trySetNumber = (num: string | null, r: number, c: number): void => {
@@ -192,12 +217,18 @@ const GameScreen: FC = ({navigation, route, setStats}) => {
           numSelected={numSelected}
         />
 
-        <Animatable.Text
-          useNativeDriver={true}
-          ref={errorsRef}
-          style={styles.text}>
-          ОШИБОК: {errorsCounter}/{MAX_ERRORS}
-        </Animatable.Text>
+        <View style={styles.footerButtons}>
+          <Animatable.Text
+            useNativeDriver={true}
+            ref={errorsRef}
+            style={styles.text}>
+            ОШИБОК: {errorsCounter}/{MAX_ERRORS}
+          </Animatable.Text>
+
+          <TouchableOpacity onPress={onHintPress}>
+            <Text style={styles.text}>ПОДСКАЗКА({hints})</Text>
+          </TouchableOpacity>
+        </View>
       </ImageBackground>
 
       {/* TODO: метод toString для Time вместо этого тернарного */}
@@ -257,8 +288,7 @@ const styles = StyleSheet.create({
   },
   footerButtons: {
     width: '100%',
-    position: 'absolute',
-    bottom: 0,
+    marginTop: 30,
     justifyContent: 'space-between',
     flexDirection: 'row',
   },

@@ -1,17 +1,27 @@
 import * as Animatable from 'react-native-animatable';
-import React, {FC, useState} from 'react';
-import {ImageBackground, NativeModules, StyleSheet, View} from 'react-native';
+import React, {FC, useContext, useEffect, useState} from 'react';
+import {
+  DeviceEventEmitter,
+  ImageBackground,
+  NativeEventEmitter,
+  NativeModules,
+  StyleSheet,
+  ToastAndroid,
+  View,
+} from 'react-native';
 import {pattern, sensei} from '../assets/Images';
 import Button from '../components/button';
 import Logo from '../components/Logo';
 import ModalSelectLevel from '../components/ModalSelectLevel';
 import {COLORS, SIZE} from '../utils/constants';
 import {Level} from '../utils/SudokuSeeds';
+import {StatsContext} from '../utils/Contexts';
 
 // TODO: типизировать скрины
 // https://reactnavigation.org/docs/typescript/
-const HomeScreen: FC = ({navigation}) => {
+const HomeScreen: FC = ({navigation, setStats}) => {
   const [showSelectLevel, setShowSelectLevel] = useState(false);
+  const {hints} = useContext(StatsContext);
 
   // const animBounceInUp = () => Animatable.
   const onClickNewGame = () => {
@@ -25,7 +35,22 @@ const HomeScreen: FC = ({navigation}) => {
 
   // Работа с Yandex SDK через нативные модули
   const {RewardedAdModule} = NativeModules;
-  const showRewardedAd = () => RewardedAdModule.openAdActivity();
+  const showRewardedAd = (): void => RewardedAdModule.openAdActivity();
+
+  useEffect(() => {
+    // Когда просмотр рекламы засчитался, добавить подсказку
+    if (DeviceEventEmitter.listenerCount('onRewarded') === 0) {
+      DeviceEventEmitter.addListener('onRewarded', () => {
+        ToastAndroid.show('+1 подсказка', ToastAndroid.SHORT);
+        setStats(prev => ({...prev, hints: prev.hints + 1}));
+      });
+    }
+  }, []);
+
+  // componentWillUnmount
+  useEffect(() => {
+    return () => DeviceEventEmitter.removeAllListeners('onRewarded');
+  }, []);
 
   return (
     <>
@@ -45,11 +70,11 @@ const HomeScreen: FC = ({navigation}) => {
         <Logo style={styles.logo} />
         <Button onClick={onClickNewGame} isPrimary text="НОВАЯ" />
         <Button text="ПРОДОЛЖИТЬ" isDisabled />
-        <Button text="ПОДСКАЗКИ (0)" onClick={() => showRewardedAd()} />
 
         <View style={styles.footerButtons}>
           <Button isDisabled text="НАСТРОЙКИ" />
-          <Button isDisabled text="СТАТИСТИКА" />
+          <Button text={`ПОДСКАЗКИ(${hints})`} onClick={showRewardedAd} />
+          {/* <Button isDisabled text="СТАТИСТИКА" /> */}
         </View>
       </ImageBackground>
 

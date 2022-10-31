@@ -79,7 +79,9 @@ const App: FC = () => {
           <StatsContext.Provider value={stats}>
             <NavigationContainer>
               <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name="Home" component={HomeScreen} />
+                <Stack.Screen name="Home">
+                  {props => <HomeScreen {...props} setStats={setStats} />}
+                </Stack.Screen>
                 <Stack.Screen name="Game">
                   {props => <GameScreen {...props} setStats={setStats} />}
                 </Stack.Screen>

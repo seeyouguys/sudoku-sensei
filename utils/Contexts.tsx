@@ -13,6 +13,7 @@ export type PlayerStats = {
   evil: LevelStats;
   winsToLevelUpCounter: number;
   maxLevel: Level;
+  hints: number;
 };
 
 export const defaultPlayerStats: PlayerStats = {
@@ -34,6 +35,7 @@ export const defaultPlayerStats: PlayerStats = {
   },
   winsToLevelUpCounter: 0,
   maxLevel: 'easy',
+  hints: 3,
 };
 
 export const StatsContext = createContext<PlayerStats>(defaultPlayerStats);
