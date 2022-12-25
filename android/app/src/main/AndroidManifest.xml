@@ -23,9 +23,9 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
-      <activity
-        android:name=".RewardedAdActivity"
-        android:exported="false"
-        android:label="@string/rewarded_title" />
+      <!-- <activity -->
+      <!--   android:name=".RewardedAdActivity" -->
+      <!--   android:exported="false" -->
+      <!--   android:label="@string/rewarded_title" /> -->
     </application>
 </manifest>
