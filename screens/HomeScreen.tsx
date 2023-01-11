@@ -3,6 +3,7 @@ import React, {FC, useContext, useEffect, useState} from 'react';
 import {
   DeviceEventEmitter,
   ImageBackground,
+  NativeModules,
   StyleSheet,
   ToastAndroid,
   View,
@@ -14,6 +15,7 @@ import ModalSelectLevel from '../components/ModalSelectLevel';
 import {COLORS, SIZE} from '../utils/constants';
 import {Level} from '../utils/SudokuSeeds';
 import {StatsContext} from '../utils/Contexts';
+import {showRewardedAd} from '../utils/RewardedAdModule';
 
 // TODO: типизировать скрины
 // https://reactnavigation.org/docs/typescript/
@@ -21,7 +23,6 @@ const HomeScreen: FC = ({navigation, setStats}) => {
   const [showSelectLevel, setShowSelectLevel] = useState(false);
   const {hints} = useContext(StatsContext);
 
-  // const animBounceInUp = () => Animatable.
   const onClickNewGame = () => {
     setShowSelectLevel(true);
   };
@@ -31,26 +32,20 @@ const HomeScreen: FC = ({navigation, setStats}) => {
     setShowSelectLevel(false);
   };
 
-  // ########################### OLD CODE FOR YANDEX ADS #######################
-  // Работа с Yandex SDK через нативные модули
-  // const {RewardedAdModule} = NativeModules;
-  // const showRewardedAd = (): void => RewardedAdModule.openAdActivity();
-
-  // useEffect(() => {
-  //   // Когда просмотр рекламы засчитался, добавить подсказку
-  //   if (DeviceEventEmitter.listenerCount('onRewarded') === 0) {
-  //     DeviceEventEmitter.addListener('onRewarded', () => {
-  //       ToastAndroid.show('+1 подсказка', ToastAndroid.SHORT);
-  //       setStats(prev => ({...prev, hints: prev.hints + 1}));
-  //     });
-  //   }
-  // }, []);
+  useEffect(() => {
+    // Когда просмотр рекламы засчитался, добавить подсказку
+    if (DeviceEventEmitter.listenerCount('onReward') === 0) {
+      DeviceEventEmitter.addListener('onReward', () => {
+        ToastAndroid.show('+1 подсказка', ToastAndroid.SHORT);
+        setStats(prev => ({...prev, hints: prev.hints + 1}));
+      });
+    }
+  }, []);
 
   // componentWillUnmount
-  // useEffect(() => {
-  //   return () => DeviceEventEmitter.removeAllListeners('onRewarded');
-  // }, []);
-  // ########################### OLD CODE FOR YANDEX ADS #######################
+  useEffect(() => {
+    return () => DeviceEventEmitter.removeAllListeners('onRewarded');
+  }, []);
 
   return (
     <>
@@ -73,7 +68,7 @@ const HomeScreen: FC = ({navigation, setStats}) => {
 
         <View style={styles.footerButtons}>
           <Button isDisabled text="НАСТРОЙКИ" />
-          <Button text={`ПОДСКАЗКИ(${hints})`} isDisabled />
+          <Button onClick={showRewardedAd} text={`ПОДСКАЗКИ(${hints})`} />
           {/* <Button isDisabled text="СТАТИСТИКА" /> */}
         </View>
       </ImageBackground>

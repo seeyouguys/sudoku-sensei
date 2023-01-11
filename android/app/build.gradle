@@ -296,7 +296,7 @@ dependencies {
     // AppMetrica SDK.
     // implementation 'com.yandex.android:mobmetricalib:4.1.1'
     // myTarget Ads SDK
-    implementation 'com.my.target:mytarget-sdk:5.6.+'
+    implementation 'com.my.target:mytarget-sdk:5.16.3'
 }
 
 if (isNewArchitectureEnabled()) {
