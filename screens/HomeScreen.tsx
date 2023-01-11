@@ -16,11 +16,13 @@ import {COLORS, SIZE} from '../utils/constants';
 import {Level} from '../utils/SudokuSeeds';
 import {StatsContext} from '../utils/Contexts';
 import {showRewardedAd} from '../utils/RewardedAdModule';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // TODO: типизировать скрины
 // https://reactnavigation.org/docs/typescript/
 const HomeScreen: FC = ({navigation, setStats}) => {
   const [showSelectLevel, setShowSelectLevel] = useState(false);
+  const [isSpinnerVisible, setSpinnerVisible] = useState(false);
   const {hints} = useContext(StatsContext);
 
   const onClickNewGame = () => {
@@ -47,6 +49,14 @@ const HomeScreen: FC = ({navigation, setStats}) => {
     return () => DeviceEventEmitter.removeAllListeners('onRewarded');
   }, []);
 
+  const onHintsClick = () => {
+    showRewardedAd();
+    setSpinnerVisible(true);
+    setTimeout(() => {
+      setSpinnerVisible(false);
+    }, 3000);
+  };
+
   return (
     <>
       <ImageBackground
@@ -63,12 +73,18 @@ const HomeScreen: FC = ({navigation, setStats}) => {
           resizeMode="cover"
         />
         <Logo style={styles.logo} />
+
+        <Spinner
+          visible={isSpinnerVisible}
+          textStyle={styles.spinnerTextStyle}
+        />
+
         <Button onClick={onClickNewGame} isPrimary text="НОВАЯ" />
         <Button text="ПРОДОЛЖИТЬ" isDisabled />
 
         <View style={styles.footerButtons}>
           <Button isDisabled text="НАСТРОЙКИ" />
-          <Button onClick={showRewardedAd} text={`ПОДСКАЗКИ(${hints})`} />
+          <Button onClick={onHintsClick} text={`ПОДСКАЗКИ(${hints})`} />
           {/* <Button isDisabled text="СТАТИСТИКА" /> */}
         </View>
       </ImageBackground>
