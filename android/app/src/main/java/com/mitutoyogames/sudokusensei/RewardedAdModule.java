@@ -87,7 +87,7 @@ public class RewardedAdModule extends ReactContextBaseJavaModule {
         // При получении награды за просмотр полноэкранной рекламы в метод onReward слушателя
         // передаётся объект Reward, содержащий поле type (Reward.type)
 
-        sendEvent(reactContext, "onDismiss", null);
+        sendEvent(reactContext, "onReward", null);
       }
     });
 
